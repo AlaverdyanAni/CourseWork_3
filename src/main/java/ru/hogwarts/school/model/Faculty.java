@@ -1,7 +1,9 @@
 package ru.hogwarts.school.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.OneToMany;
 import nonapi.io.github.classgraph.json.Id;
+import java.util.List;
 import java.util.Objects;
 
 @Entity(name="Faculties")
@@ -13,11 +15,15 @@ public class Faculty {
     private String name;
     private String colour;
 
+    @OneToMany(mappedBy = "faculty")
+    private List <Student> students;
+
     public Faculty(Long id, String name, String color) {
         this.id = id;
         this.name = name;
         this.colour = colour;
     }
+
     public Faculty() {
     }
 

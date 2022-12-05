@@ -17,13 +17,13 @@ public class StudentController {
         this.studentService = studentService;
     }
 
-    @PostMapping //POST http://localhost:8080/students/2
+    @PostMapping //POST http://localhost:8080/student/2
     public ResponseEntity<Student> createStudent(@RequestBody Student student) {
         Student createdStudent = studentService.createStudent(student);
         return ResponseEntity.ok(createdStudent);
     }
 
-    @GetMapping("{id}") //GET http://localhost:8080/students/2
+    @GetMapping("{id}") //GET http://localhost:8080/student/2
     public ResponseEntity<Student> readStudent(@PathVariable Long id) {
         Student student = studentService.readStudent(id);
         if (student == null) {
@@ -32,7 +32,7 @@ public class StudentController {
         return ResponseEntity.ok(student);
     }
 
-    @PutMapping //PUT http://localhost:8080/students/2
+    @PutMapping //PUT http://localhost:8080/student/2
     public ResponseEntity<Student> updateStudent(@RequestBody Student student) {
         Student updatedStudent = studentService.updateStudent(student);
         if (updatedStudent == null) {
@@ -42,23 +42,34 @@ public class StudentController {
 
     }
 
-    @DeleteMapping("{id}") //Delete http://localhost:8080/students/2
+    @DeleteMapping("{id}") //Delete http://localhost:8080/student/2
     public ResponseEntity deleteStudent(@PathVariable Long id) {
         studentService.deleteStudent(id);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping //GET http://localhost:8080/students/2
+    @GetMapping //GET http://localhost:8080/student/2
     public ResponseEntity<List<Student>> getStudents() {
         return ResponseEntity.ok(studentService.getStudents());
     }
 
-    //@GetMapping("/age") //GET http://localhost:8080/students/2
+    @GetMapping //GET http://localhost:8080/student/18,20
+    public ResponseEntity<List<Student>> findStudentsByAgeBetween(@RequestParam int minAge, @RequestParam int maxAge) {
+        return ResponseEntity.ok(studentService.findStudentsByAgeBetween(minAge, maxAge));
+    }
+
+    @GetMapping("/faculty/{id}") //GET http://localhost:8080/student/faculty/1
+    public  ResponseEntity <String> findFacultyStudent(@PathVariable Long id){
+        return ResponseEntity.ok(studentService.findStudentFaculty(id));
+    }
+
+
+    // @GetMapping("/age") //GET http://localhost:8080/students/2
     // public ResponseEntity<List<Student>> getStudentsByAge(@RequestParam Integer age){
     //    if (age<7||age>60){
     //        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     //   }
     //  return ResponseEntity.ok(studentService.getStudentsByAge(age));
-    //}
+    // }
 }
 
