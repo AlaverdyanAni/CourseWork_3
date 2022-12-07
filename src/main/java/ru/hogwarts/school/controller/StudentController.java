@@ -1,11 +1,10 @@
 package ru.hogwarts.school.controller;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
-
 import java.util.List;
 
 @RestController
@@ -39,7 +38,6 @@ public class StudentController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         return ResponseEntity.ok(updatedStudent);
-
     }
 
     @DeleteMapping("{id}") //Delete http://localhost:8080/student/2
@@ -58,11 +56,10 @@ public class StudentController {
         return ResponseEntity.ok(studentService.findStudentsByAgeBetween(minAge, maxAge));
     }
 
-    @GetMapping("/faculty/{id}") //GET http://localhost:8080/student/faculty/1
-    public  ResponseEntity <String> findFacultyStudent(@PathVariable Long id){
+    @GetMapping("/{id}/faculty") //GET http://localhost:8080/student/1/faculty
+    public  ResponseEntity <Faculty> findFacultyStudent(@PathVariable Long id){
         return ResponseEntity.ok(studentService.findStudentFaculty(id));
     }
-
 
     // @GetMapping("/age") //GET http://localhost:8080/students/2
     // public ResponseEntity<List<Student>> getStudentsByAge(@RequestParam Integer age){

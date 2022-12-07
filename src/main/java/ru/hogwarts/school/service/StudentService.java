@@ -36,16 +36,13 @@ public class StudentService {
     public List<Student> findStudentsByAgeBetween(int minAge, int maxAge){
         return studentRepository.findStudentsByAgeBetween(minAge,maxAge);
     }
-    public String findStudentFaculty(long id){
+    public Faculty findStudentFaculty(long id){
         Student student=readStudent(id);
-        if (student==null){
-            return null;
-        }
         Faculty faculty=student.getFaculty();
         if (faculty==null) {
             return null;
         }
-        return faculty.getName();
+        return faculty;
     }
 
    // public List<Student> getStudentsByAge(int age) {

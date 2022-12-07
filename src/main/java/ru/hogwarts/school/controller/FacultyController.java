@@ -1,5 +1,4 @@
 package ru.hogwarts.school.controller;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -52,21 +51,16 @@ public class FacultyController {
         return ResponseEntity.ok(facultyService.getFaculties());
     }
 
-    @GetMapping("/colour/{colour}") //GET http"//localhost:8080/faculty/colour/green
-    public ResponseEntity<List<Faculty>> getFacultiesByColour(@PathVariable String colour){
-        return ResponseEntity.ok(facultyService.getFacultiesByColour(colour));
-    }
-
-    @GetMapping("/colour") //GET http"//localhost:8080/faculty/colour
-    public ResponseEntity<Faculty> findFacultyByNameOrColour(@RequestParam String text){
-        Faculty faculty=facultyService.findFacultiesByNameOrColour(text);
-        if (faculty==null){
+    @GetMapping( "/colour") //GET http"//localhost:8080/faculty/colour
+    public ResponseEntity<List<Faculty>> findFacultiesByNameOrColour(@RequestParam(required = false) String text){
+        List<Faculty>faculties=facultyService.findFacultiesByNameOrColour(text);
+        if (faculties.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        return ResponseEntity.ok(faculty);
+        return ResponseEntity.ok(faculties);
     }
 
-    @GetMapping("/students/{id}") //GET http"//localhost:8080/students/3
+    @GetMapping("/{id}/students") //GET http"//localhost:8080/3/students
     public ResponseEntity <List<Student>> findFacultyStudents(@PathVariable Long id){
         return ResponseEntity.ok(facultyService.findFacultyStudents(id));
     }
