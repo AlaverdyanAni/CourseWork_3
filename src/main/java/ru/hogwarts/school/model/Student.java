@@ -1,16 +1,11 @@
 package ru.hogwarts.school.model;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import nonapi.io.github.classgraph.json.Id;
+import jakarta.persistence.*;
 import java.util.Objects;
 
 @Entity(name="Students")
  public class Student{
-    @jakarta.persistence.Id
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private int age;

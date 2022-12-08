@@ -38,11 +38,10 @@ public class StudentService {
     }
     public Faculty findStudentFaculty(long id){
         Student student=readStudent(id);
-        Faculty faculty=student.getFaculty();
-        if (faculty==null) {
+        if (student==null) {
             return null;
         }
-        return faculty;
+        return student.getFaculty();
     }
 
    // public List<Student> getStudentsByAge(int age) {

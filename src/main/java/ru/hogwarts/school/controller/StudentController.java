@@ -57,7 +57,7 @@ public class StudentController {
     }
 
     @GetMapping("/{id}/faculty") //GET http://localhost:8080/student/1/faculty
-    public  ResponseEntity <Faculty> findFacultyStudent(@PathVariable Long id){
+    public  ResponseEntity <Faculty> findStudentFaculty(@PathVariable Long id){
         return ResponseEntity.ok(studentService.findStudentFaculty(id));
     }
 

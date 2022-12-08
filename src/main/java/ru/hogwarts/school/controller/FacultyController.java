@@ -51,12 +51,9 @@ public class FacultyController {
         return ResponseEntity.ok(facultyService.getFaculties());
     }
 
-    @GetMapping( "/colour") //GET http"//localhost:8080/faculty/colour
-    public ResponseEntity<List<Faculty>> findFacultiesByNameOrColour(@RequestParam(required = false) String text){
+    @GetMapping(value = "/colour",params = "text") //GET http"//localhost:8080/faculty/text
+    public ResponseEntity<List<Faculty>> findFacultiesByNameOrColour(@RequestParam String text){
         List<Faculty>faculties=facultyService.findFacultiesByNameOrColour(text);
-        if (faculties.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
         return ResponseEntity.ok(faculties);
     }
 

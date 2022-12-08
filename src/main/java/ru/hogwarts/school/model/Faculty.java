@@ -1,16 +1,13 @@
 package ru.hogwarts.school.model;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import nonapi.io.github.classgraph.json.Id;
 import java.util.List;
 import java.util.Objects;
 
 @Entity(name="Faculties")
 public class Faculty {
-    @jakarta.persistence.Id
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String colour;
@@ -18,13 +15,13 @@ public class Faculty {
     @OneToMany(mappedBy = "faculty")
     private List <Student> students;
 
-    public Faculty(Long id, String name, String color) {
+    public Faculty(Long id, String name, String colour) {
         this.id = id;
         this.name = name;
         this.colour = colour;
     }
-
     public Faculty() {
+
     }
 
     public Long getId() {

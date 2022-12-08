@@ -37,7 +37,7 @@ public class FacultyService {
     }
 
     public List<Faculty> findFacultiesByNameOrColour(String text){
-        return facultyRepository.findFacultiesByNameIgnoreCaseOrByColourIgnoreCase(text,text);
+        return facultyRepository.findFacultiesByNameIgnoreCaseOrColourIgnoreCase(text,text);
     }
     public List<Student> findFacultyStudents(long id){
         Faculty faculty=readFaculty(id);
