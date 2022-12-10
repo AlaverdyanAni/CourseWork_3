@@ -1,10 +1,12 @@
 package ru.hogwarts.school.model;
-import jakarta.persistence.*;
 import nonapi.io.github.classgraph.json.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@Entity(name="Faculties")
+@Entity
+@Table(name="faculties")
 public class Faculty {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,13 +17,14 @@ public class Faculty {
     @OneToMany(mappedBy = "faculty")
     private List <Student> students;
 
-    public Faculty(Long id, String name, String colour) {
+    public Faculty(Long id, String name, String colour,List<Student> students) {
         this.id = id;
         this.name = name;
         this.colour = colour;
+        this.students=new ArrayList<>();
     }
-    public Faculty() {
 
+    public Faculty() {
     }
 
     public Long getId() {

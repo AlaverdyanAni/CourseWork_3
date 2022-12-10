@@ -17,11 +17,12 @@ public class FacultyService {
     }
 
     public Faculty createFaculty(Faculty faculty) {
+        faculty.setId(null);
         return facultyRepository.save(faculty);
     }
 
     public Faculty readFaculty(long id) {
-        return facultyRepository.findById(id).get();
+        return facultyRepository.findById(id).orElse(null);
     }
 
     public Faculty updateFaculty(Faculty faculty) {

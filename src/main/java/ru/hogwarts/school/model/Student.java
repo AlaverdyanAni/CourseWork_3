@@ -1,8 +1,9 @@
 package ru.hogwarts.school.model;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import java.util.Objects;
 
-@Entity(name="Students")
+@Entity
+@Table(name="Students")
  public class Student{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

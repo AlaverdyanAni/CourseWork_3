@@ -1,5 +1,4 @@
 package ru.hogwarts.school.service;
-
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
@@ -15,11 +14,12 @@ public class StudentService {
     }
 
     public Student createStudent(Student student) {
+        student.setId(null);
         return studentRepository.save(student);
     }
 
     public Student readStudent(long id) {
-        return studentRepository.findById(id).get();
+        return studentRepository.findById(id).orElse(null);
     }
 
     public Student updateStudent(Student student) {
