@@ -1,5 +1,4 @@
 package ru.hogwarts.school.model;
-import nonapi.io.github.classgraph.json.Id;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;

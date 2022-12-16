@@ -40,12 +40,12 @@ public class FacultyService {
     public List<Faculty> findFacultiesByNameOrColour(String text){
         return facultyRepository.findFacultiesByNameIgnoreCaseOrColourIgnoreCase(text,text);
     }
-    public List<Student> findFacultyStudents(long id){
-        Faculty faculty=readFaculty(id);
+    public List<Student> findFacultyStudents(long facultyId){
+        Faculty faculty=readFaculty(facultyId);
         return studentRepository.findStudentsByFacultyId(faculty.getId());
     }
 
-    //public List<Faculty> getFacultiesByColour(String colour) {
+    // public List<Faculty> getFacultiesByColour(String colour) {
     //   if (colour == null && colour.isBlank()) {
     //      throw  new NullPointerException("Введите цвет!");
     // }

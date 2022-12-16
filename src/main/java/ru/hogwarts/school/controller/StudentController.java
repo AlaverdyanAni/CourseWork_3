@@ -29,7 +29,7 @@ public class StudentController {
         this.studentService = studentService;
         this.avatarService = avatarService;
     }
-    @PostMapping //POST http://localhost:8080/student/2
+    @PostMapping //POST http://localhost:8080/student
     public ResponseEntity<Student> createStudent(@RequestBody Student student) {
         return ResponseEntity.ok(studentService.createStudent(student));
     }
@@ -39,23 +39,23 @@ public class StudentController {
         return ResponseEntity.ok(studentService.readStudent(id));
     }
 
-    @PutMapping //PUT http://localhost:8080/student/2
+    @PutMapping //PUT http://localhost:8080/student
     public ResponseEntity<Student> updateStudent(@RequestBody Student student) {
         return ResponseEntity.ok(studentService.updateStudent(student));
     }
 
     @DeleteMapping("{id}") //Delete http://localhost:8080/student/2
-    public ResponseEntity deleteStudent(@PathVariable Long id) {
+    public ResponseEntity<Student> deleteStudent(@PathVariable Long id) {
         studentService.deleteStudent(id);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping //GET http://localhost:8080/student/2
+    @GetMapping ("/all") //GET http://localhost:8080/student/2
     public ResponseEntity<List<Student>> getStudents() {
         return ResponseEntity.ok(studentService.getStudents());
     }
 
-    @GetMapping (params = {"minAge","maxAge"})//GET http://localhost:8080/student/18,20
+    @GetMapping (params = {"minAge","maxAge"})//GET http://localhost:8080/student?minAge=18&maxAge=20
     public ResponseEntity<List<Student>> findStudentsByAgeBetween(@RequestParam int minAge,
                                                                   @RequestParam int maxAge) {
         return ResponseEntity.ok(studentService.findStudentsByAgeBetween(minAge, maxAge));
@@ -66,13 +66,13 @@ public class StudentController {
         return ResponseEntity.ok(studentService.findStudentFaculty(id));
     }
 
-    @PostMapping(value  ="{studentId}/avatar",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> uploadAvatar(@PathVariable Long studentId,
+    @PostMapping(value  ="{id}/avatar",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> uploadAvatar(@PathVariable Long id,
                                                @RequestParam MultipartFile avatar) throws IOException {
         if (avatar.getSize() > 1024 * 300) {
             return ResponseEntity.badRequest().body("File is too big!");
         }
-        avatarService.uploadAvatar(studentId, avatar);
+        avatarService.uploadAvatar(id, avatar);
         return ResponseEntity.ok().build();
     }
 

@@ -15,33 +15,33 @@ public class FacultyController {
         this.facultyService = facultyService;
     }
 
-    @PostMapping // POST http:localhost:8080/faculty
+    @PostMapping // POST http:localhost:8080/faculties
     public ResponseEntity<Faculty> createFaculty(@RequestBody Faculty faculty) {
         return ResponseEntity.ok(facultyService.createFaculty(faculty));
     }
 
-    @GetMapping("{id}") // GET http://localhost:8080/faculty/1
+    @GetMapping("{id}") // GET http://localhost:8080/faculties/1
     public ResponseEntity<Faculty> readFaculty(@PathVariable Long id) {
         return ResponseEntity.ok(facultyService.readFaculty(id));
     }
 
-    @PutMapping // PUT http"//localhost:8080/faculty
+    @PutMapping // PUT http"//localhost:8080/faculties
     public ResponseEntity<Faculty> updateFaculty(@RequestBody Faculty faculty) {
         return ResponseEntity.ok(facultyService.updateFaculty(faculty));
     }
 
-    @DeleteMapping("{id}") // DELETE http"//localhost:8080/faculty/1
+    @DeleteMapping("{id}") // DELETE http"//localhost:8080/faculties/1
     public ResponseEntity<Faculty> deleteFaculty(@PathVariable Long id) {
         facultyService.deleteFaculty(id);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping // GET http"//localhost:8080/faculty
+    @GetMapping ("/all") // GET http"//localhost:8080/faculty/all
     public ResponseEntity<List<Faculty>> getFaculties() {
         return ResponseEntity.ok(facultyService.getFaculties());
     }
 
-    @GetMapping(value = "/colour",params = "text") //GET http"//localhost:8080/faculty/text
+    @GetMapping(value = "/colour",params = "text") //GET http"//localhost:8080/faculties/colour?text=
     public ResponseEntity<List<Faculty>> findFacultiesByNameOrColour(@RequestParam String text){
         return ResponseEntity.ok(facultyService.findFacultiesByNameOrColour(text));
     }
@@ -52,7 +52,7 @@ public class FacultyController {
     }
 
 
-    //@GetMapping("/colour") // GET http"//localhost:8080/faculty?colour=
+    //@GetMapping("/colour") // GET http"//localhost:8080/faculties/colour?colour=
     //public ResponseEntity<List<Faculty>> getFacultiesByColour(@RequestParam String colour){
     //    if (colour==null && colour.isBlank()){
     //       return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

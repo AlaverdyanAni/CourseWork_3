@@ -6,14 +6,13 @@ public class Avatar {
     @Id
     @GeneratedValue
     private Long id;
-    private String filePath;
-    private long fileSize;
-    private String mediaType;
+    private String filePath; //путь файла на диске, куда будем сохранять оригинал файла
+    private long fileSize; //размер файла
+    private String mediaType; //тип файла
     @Lob
-    private byte[]data;
+    private byte[]data; //массив байт аватарки в уменшенном размере(хранить будем в БД)
     @OneToOne
    private Student student;
-
 
     public Long getId() {
         return id;
