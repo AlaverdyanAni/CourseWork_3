@@ -1,5 +1,6 @@
 package ru.hogwarts.school.service;
 import org.springframework.stereotype.Service;
+import ru.hogwarts.school.exception.FacultyNotFoundException;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repositories.FacultyRepository;
@@ -22,23 +23,28 @@ public class FacultyService {
     }
 
     public Faculty readFaculty(long id) {
-        return facultyRepository.findById(id).orElse(null);
+        return facultyRepository.findById(id).orElseThrow(()->new FacultyNotFoundException(id));
     }
 
-    public Faculty updateFaculty(Faculty faculty) {
+    public Faculty updateFaculty(long id,Faculty newFaculty) {
+        Faculty faculty=readFaculty(id);
+        faculty.setName(newFaculty.getName());
+        faculty.setColour(newFaculty.getColour());
         return facultyRepository.save(faculty);
     }
 
-    public void deleteFaculty(long id) {
-        facultyRepository.deleteById(id);
+    public Faculty deleteFaculty(long id) {
+        Faculty faculty=readFaculty(id);
+        facultyRepository.delete(faculty);
+        return faculty;
     }
 
     public List<Faculty> getFaculties() {
         return facultyRepository.findAll();
     }
 
-    public List<Faculty> findFacultiesByNameOrColour(String text){
-        return facultyRepository.findFacultiesByNameIgnoreCaseOrColourIgnoreCase(text,text);
+    public List<Faculty> findFacultiesByNameOrColour(String nameOrColour){
+        return facultyRepository.findFacultiesByNameIgnoreCaseOrColourIgnoreCase(nameOrColour,nameOrColour);
     }
     public List<Student> findFacultyStudents(long facultyId){
         Faculty faculty=readFaculty(facultyId);

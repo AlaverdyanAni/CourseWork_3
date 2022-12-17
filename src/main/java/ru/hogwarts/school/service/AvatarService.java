@@ -1,7 +1,10 @@
 package ru.hogwarts.school.service;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import ru.hogwarts.school.exception.AvatarNotFoundException;
 import ru.hogwarts.school.model.Avatar;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repositories.AvatarRepository;
@@ -12,6 +15,9 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
+import java.util.Objects;
+
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
 @Service
@@ -28,49 +34,59 @@ public class AvatarService {
         this.studentService=studentService;
     }
 
-    public void uploadAvatar(Long studentId, MultipartFile avatarFile) throws IOException{
+    public void uploadAvatar(Long studentId, MultipartFile file) throws IOException{
         Student student=studentService.readStudent(studentId);
 
-        Path filePath= Path.of(avatarsDir,studentId+"."+getExtensions(avatarFile.getOriginalFilename()));
+        Path filePath= Path.of(avatarsDir,studentId+"."+getExtension(Objects.requireNonNull(file.getOriginalFilename())));
         Files.createDirectories(filePath.getParent());
         Files.deleteIfExists(filePath);
-        try(
-                InputStream is=avatarFile.getInputStream();
-                OutputStream os=Files.newOutputStream(filePath, CREATE_NEW);
-                BufferedInputStream bis=new BufferedInputStream(is,1024);
-                BufferedOutputStream bos=new BufferedOutputStream(os,1024);
-                ) {
+
+        try(InputStream is=file.getInputStream();
+            OutputStream os=Files.newOutputStream(filePath, CREATE_NEW);
+            BufferedInputStream bis=new BufferedInputStream(is,1024);
+            BufferedOutputStream bos=new BufferedOutputStream(os,1024)){
             bis.transferTo(bos);
         }
         Avatar avatar=findAvatarByStudentId(studentId);
-                avatar.setStudent(student);
-                avatar.setFilePath(filePath.toString());
-                avatar.setFileSize(avatarFile.getSize());
-                avatar.setMediaType(avatarFile.getContentType());
-                avatar.setData(avatarFile.getBytes());
-                avatarRepository.save(avatar);
+        avatar.setStudent(student);
+        avatar.setFilePath(filePath.toString());
+        avatar.setFileSize(file.getSize());
+        avatar.setMediaType(file.getContentType());
+        avatar.setData(file.getBytes());
+
+        avatarRepository.save(avatar);
     }
     public Avatar findAvatarByStudentId(Long studentId) {
-        return avatarRepository.findAvatarByStudentId(studentId).orElse(new Avatar());
+        return avatarRepository.findAvatarByStudentId(studentId).orElseThrow(()->new AvatarNotFoundException(studentId));
     }
 
-    private String getExtensions(String fileName){
+    private String getExtension(String fileName){
         return fileName.substring(fileName.lastIndexOf(".")+1);
     }
 
-    private byte[] generateAvatarPreview(Path filePath) throws IOException {
-        try (
-                InputStream is = Files.newInputStream(filePath);
-                BufferedInputStream bis = new BufferedInputStream(is, 1024);
-                ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+    private byte[] generateImagePreview(Path filePath) throws IOException {
+        try (InputStream is = Files.newInputStream(filePath);
+             BufferedInputStream bis = new BufferedInputStream(is, 1024);
+             ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+
             BufferedImage image = ImageIO.read(bis);
+
             int height = image.getHeight() / (image.getHeight() / 100);
             BufferedImage preview = new BufferedImage(100, height, image.getType());
             Graphics graphics = preview.createGraphics();
             graphics.drawImage(image, 0, 0, 100, height, null);
             graphics.dispose();
-            ImageIO.write(preview, getExtensions(filePath.getFileName().toString()),baos);
+
+            ImageIO.write(preview, getExtension(filePath.getFileName().toString()),baos);
             return baos.toByteArray();
         }
+    }
+    public ResponseEntity<Collection<Avatar>> findByPagination(int page, int size){
+        PageRequest pageRequest=PageRequest.of(page-1, size);
+        Collection<Avatar> avatars=avatarRepository.findAll(pageRequest).getContent();
+        if (avatars.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(avatars);
     }
 }

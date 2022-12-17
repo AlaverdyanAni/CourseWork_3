@@ -1,9 +1,11 @@
 package ru.hogwarts.school.service;
 import org.springframework.stereotype.Service;
+import ru.hogwarts.school.exception.StudentNotFoundException;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import java.util.List;
 import ru.hogwarts.school.repositories.StudentRepository;
+import ru.hogwarts.school.repositories.StudentsList;
 
 @Service
 public class StudentService {
@@ -19,15 +21,20 @@ public class StudentService {
     }
 
     public Student readStudent(long id) {
-        return studentRepository.findById(id).orElse(null);
+        return studentRepository.findById(id).orElseThrow(()->new StudentNotFoundException(id));
     }
 
-    public Student updateStudent(Student student) {
+    public Student updateStudent(long id,Student newStudent) {
+        Student student=readStudent(id);
+        student.setName(newStudent.getName());
+        student.setAge(newStudent.getAge());
         return studentRepository.save(student);
     }
 
-    public void deleteStudent(long id) {
-        studentRepository.deleteById(id);
+    public Student deleteStudent(long id) {
+        Student student=readStudent(id);
+        studentRepository.delete(student);
+        return student;
     }
 
     public List<Student> getStudents() {
@@ -42,6 +49,15 @@ public class StudentService {
             return null;
         }
         return student.getFaculty();
+    }
+    public int getStudentsCount(){
+        return  studentRepository.getStudentsCount();
+    }
+    public double getStudentsAgeAvg(){
+        return studentRepository.getStudentsAgeAvg();
+    }
+    public List<StudentsList> getLastStudentsById(int limit){
+        return studentRepository.getLastStudentsById(limit);
     }
 
    // public List<Student> getStudentsByAge(int age) {

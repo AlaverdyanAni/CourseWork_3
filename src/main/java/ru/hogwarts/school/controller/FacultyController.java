@@ -25,9 +25,9 @@ public class FacultyController {
         return ResponseEntity.ok(facultyService.readFaculty(id));
     }
 
-    @PutMapping // PUT http"//localhost:8080/faculties
-    public ResponseEntity<Faculty> updateFaculty(@RequestBody Faculty faculty) {
-        return ResponseEntity.ok(facultyService.updateFaculty(faculty));
+    @PutMapping("/{id}") // PUT http"//localhost:8080/faculties
+    public ResponseEntity<Faculty> updateFaculty(@PathVariable Long id,@RequestBody Faculty faculty) {
+        return ResponseEntity.ok(facultyService.updateFaculty(id,faculty));
     }
 
     @DeleteMapping("{id}") // DELETE http"//localhost:8080/faculties/1
