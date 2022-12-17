@@ -46,6 +46,7 @@ public class CourseWork_SchoolApplicationMVCTest {
         final String colour = "testColour";
 
         JSONObject facultyObject = new JSONObject();
+        facultyObject.put("id",id);
         facultyObject.put("name", name);
         facultyObject.put("colour", colour);
 
@@ -55,7 +56,7 @@ public class CourseWork_SchoolApplicationMVCTest {
         faculty.setColour(colour);
 
         when(facultyRepository.save(any(Faculty.class))).thenReturn(faculty);
-        when(facultyRepository.findById(any(Long.class))).thenReturn(Optional.of(faculty));
+        when(facultyRepository.findById(eq(id))).thenReturn(Optional.of(faculty));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/faculty")
@@ -82,12 +83,10 @@ public class CourseWork_SchoolApplicationMVCTest {
         faculty.setName(name);
         faculty.setColour(colour);
 
-        when(facultyRepository.findById(id)).thenReturn(Optional.of(faculty));
+        when(facultyRepository.findById(eq(id))).thenReturn(Optional.of(faculty));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/faculty/{id}",id)
-                        .content(facultyObject.toString())
-                        .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(id))
@@ -118,7 +117,7 @@ public class CourseWork_SchoolApplicationMVCTest {
         updateFaculty.setName(newName);
         updateFaculty.setColour(newColour);
 
-        when(facultyRepository.findById(id)).thenReturn(Optional.of(faculty));
+        when(facultyRepository.findById(eq(id))).thenReturn(Optional.of(faculty));
         when(facultyRepository.save(any(Faculty.class))).thenReturn(updateFaculty);
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -142,11 +141,10 @@ public class CourseWork_SchoolApplicationMVCTest {
         faculty.setName(name);
         faculty.setColour(colour);
 
-        when(facultyRepository.findById(id)).thenReturn(Optional.of(faculty));
+        when(facultyRepository.findById(eq(id))).thenReturn(Optional.of(faculty));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .delete("/faculty/{id}",id)
-                        .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
