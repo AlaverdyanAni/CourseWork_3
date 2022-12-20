@@ -57,10 +57,12 @@ public class StudentController {
     public ResponseEntity<Integer> getStudentsCount(){
         return ResponseEntity.ok(studentService.getStudentsCount());
     }
+
     @GetMapping("/age-avg")
     public ResponseEntity<Double> getStudentsAgeAvg(){
         return ResponseEntity.ok(studentService.getStudentsAgeAvg());
     }
+
     @GetMapping("/last-students")
     public ResponseEntity<List<StudentsList>> getLastStudentsById(@RequestParam Integer limit){
         return ResponseEntity.ok(studentService.getLastStudentsById(limit));

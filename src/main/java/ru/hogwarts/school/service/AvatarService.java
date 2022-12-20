@@ -81,8 +81,8 @@ public class AvatarService {
             return baos.toByteArray();
         }
     }
-    public ResponseEntity<Collection<Avatar>> findByPagination(int page, int size){
-        PageRequest pageRequest=PageRequest.of(page-1, size);
+    public ResponseEntity<Collection<Avatar>> findByPagination(int pageNumber, int pageSize){
+        PageRequest pageRequest=PageRequest.of(pageNumber-1, pageSize);
         Collection<Avatar> avatars=avatarRepository.findAll(pageRequest).getContent();
         if (avatars.isEmpty()) {
             return ResponseEntity.notFound().build();

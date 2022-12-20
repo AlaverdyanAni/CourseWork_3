@@ -51,9 +51,8 @@ public class AvatarController {
         Avatar avatar=avatarService.findAvatarByStudentId(studentId);
 
         Path path= Path.of(avatar.getFilePath());
-        try(
-                InputStream is= Files.newInputStream(path);
-                OutputStream os=response.getOutputStream()){
+        try(InputStream is= Files.newInputStream(path);
+            OutputStream os=response.getOutputStream()){
             response.setStatus(200);
             response.setContentType(avatar.getMediaType());
             response.setContentLength((int)avatar.getFileSize());
@@ -62,8 +61,8 @@ public class AvatarController {
     }
 
     @GetMapping("/page")
-    public ResponseEntity<Collection<Avatar>> findByPagination(@RequestParam Integer page,
-                                                               @RequestParam Integer size){
-        return avatarService.findByPagination(page, size);
+    public ResponseEntity<Collection<Avatar>> findByPagination(@RequestParam("page") Integer pageNumber,
+                                                               @RequestParam("size") Integer pageSize){
+        return avatarService.findByPagination(pageNumber, pageSize);
     }
 }
