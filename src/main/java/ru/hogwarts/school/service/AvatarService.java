@@ -1,5 +1,8 @@
 package ru.hogwarts.school.service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -21,6 +24,7 @@ import java.util.Objects;
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
 @Service
+@Profile("prodaction")
 @Transactional
 public class AvatarService {
     @Value("${students.avatar.dir.path}")
@@ -28,6 +32,7 @@ public class AvatarService {
 
     private final AvatarRepository avatarRepository;
     private final StudentService studentService;
+    Logger logger= LoggerFactory.getLogger(AvatarService.class);
 
     public AvatarService(AvatarRepository avatarRepository,StudentService studentService){
         this.avatarRepository=avatarRepository;
@@ -35,6 +40,7 @@ public class AvatarService {
     }
 
     public void uploadAvatar(Long studentId, MultipartFile file) throws IOException{
+        logger.debug("Loading  avatar for student with ID: {}",studentId);
         Student student=studentService.readStudent(studentId);
 
         Path filePath= Path.of(avatarsDir,studentId+"."+getExtension(Objects.requireNonNull(file.getOriginalFilename())));
@@ -57,6 +63,7 @@ public class AvatarService {
         avatarRepository.save(avatar);
     }
     public Avatar findAvatarByStudentId(Long studentId) {
+        logger.debug("Find  avatar by student ID: {}", studentId);
         return avatarRepository.findAvatarByStudentId(studentId).orElseThrow(()->new AvatarNotFoundException(studentId));
     }
 
@@ -82,7 +89,9 @@ public class AvatarService {
         }
     }
     public ResponseEntity<Collection<Avatar>> findByPagination(int pageNumber, int pageSize){
+        logger.info("Find avatars by pagination for page: {}, size: {}", pageNumber, pageSize);
         PageRequest pageRequest=PageRequest.of(pageNumber-1, pageSize);
+
         Collection<Avatar> avatars=avatarRepository.findAll(pageRequest).getContent();
         if (avatars.isEmpty()) {
             return ResponseEntity.notFound().build();
