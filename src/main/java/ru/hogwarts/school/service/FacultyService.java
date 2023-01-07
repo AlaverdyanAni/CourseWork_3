@@ -19,7 +19,7 @@ public class FacultyService {
 
     public FacultyService(FacultyRepository facultyRepository, StudentRepository studentRepository) {
         this.facultyRepository = facultyRepository;
-        this.studentRepository=studentRepository;
+        this.studentRepository = studentRepository;
     }
 
     public Faculty createFaculty(Faculty faculty) {
@@ -30,12 +30,12 @@ public class FacultyService {
 
     public Faculty readFaculty(long id) {
         logger.debug("Read faculty ID: {}", id);
-        return facultyRepository.findById(id).orElseThrow(()->new FacultyNotFoundException(id));
+        return facultyRepository.findById(id).orElseThrow(() -> new FacultyNotFoundException(id));
     }
 
-    public Faculty updateFaculty(long id,Faculty newFaculty) {
+    public Faculty updateFaculty(long id, Faculty newFaculty) {
         logger.debug("Update faculty ID: {}", id);
-        Faculty faculty=readFaculty(id);
+        Faculty faculty = readFaculty(id);
         faculty.setName(newFaculty.getName());
         faculty.setColour(newFaculty.getColour());
         return facultyRepository.save(faculty);
@@ -43,7 +43,7 @@ public class FacultyService {
 
     public Faculty deleteFaculty(long id) {
         logger.debug("Delete faculty ID: {}", id);
-        Faculty faculty=readFaculty(id);
+        Faculty faculty = readFaculty(id);
         facultyRepository.delete(faculty);
         return faculty;
     }
@@ -53,15 +53,27 @@ public class FacultyService {
         return facultyRepository.findAll();
     }
 
-    public List<Faculty> findFacultiesByNameOrColour(String nameOrColour){
+    public List<Faculty> findFacultiesByNameOrColour(String nameOrColour) {
         logger.debug("Find  all faculties by name: {} or colour: {}", nameOrColour);
-        return facultyRepository.findFacultiesByNameIgnoreCaseOrColourIgnoreCase(nameOrColour,nameOrColour);
+        return facultyRepository.findFacultiesByNameIgnoreCaseOrColourIgnoreCase(nameOrColour, nameOrColour);
     }
-    public List<Student> findFacultyStudents(long facultyId){
+
+    public List<Student> findFacultyStudents(long facultyId) {
         logger.debug("Find students by faculty ID: {}", facultyId);
-        Faculty faculty=readFaculty(facultyId);
+        Faculty faculty = readFaculty(facultyId);
         return studentRepository.findStudentsByFacultyId(faculty.getId());
     }
+
+    public String getFacultiesWithLongestName() {
+        logger.debug("Get faculties with longest name");
+        return facultyRepository
+                .findAll()
+                .stream()
+                .max(Comparator.comparingInt(f -> f.getName().length()))
+                .orElseThrow(FacultyNotFoundException::new)
+                .getName();
+    }
+}
 
     // public List<Faculty> getFacultiesByColour(String colour) {
     //   if (colour == null && colour.isBlank()) {
@@ -71,4 +83,3 @@ public class FacultyService {
     //         .filter((f -> f.getColour().equals(colour)))
     //       .collect(Collectors.toList());
     // }
-}

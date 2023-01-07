@@ -28,8 +28,8 @@ import static java.nio.file.StandardOpenOption.CREATE_NEW;
 @Transactional
 public class AvatarService {
     @Value("${students.avatar.dir.path}")
-    private String avatarsDir;
 
+    private String avatarsDir;
     private final AvatarRepository avatarRepository;
     private final StudentService studentService;
     Logger logger= LoggerFactory.getLogger(AvatarService.class);
@@ -43,14 +43,15 @@ public class AvatarService {
         logger.debug("Loading  avatar for student with ID: {}",studentId);
         Student student=studentService.readStudent(studentId);
 
-        Path filePath= Path.of(avatarsDir,studentId+"."+getExtension(Objects.requireNonNull(file.getOriginalFilename())));
+        Path filePath= Path.of(avatarsDir,studentId+"."+getExtension(file.getOriginalFilename()));
         Files.createDirectories(filePath.getParent());
         Files.deleteIfExists(filePath);
 
         try(InputStream is=file.getInputStream();
             OutputStream os=Files.newOutputStream(filePath, CREATE_NEW);
             BufferedInputStream bis=new BufferedInputStream(is,1024);
-            BufferedOutputStream bos=new BufferedOutputStream(os,1024)){
+            BufferedOutputStream bos=new BufferedOutputStream(os,1024);
+            ){
             bis.transferTo(bos);
         }
         Avatar avatar=findAvatarByStudentId(studentId);
@@ -58,8 +59,7 @@ public class AvatarService {
         avatar.setFilePath(filePath.toString());
         avatar.setFileSize(file.getSize());
         avatar.setMediaType(file.getContentType());
-        avatar.setData(file.getBytes());
-
+        avatar.setData(generateImagePreview(filePath));
         avatarRepository.save(avatar);
     }
     public Avatar findAvatarByStudentId(Long studentId) {
@@ -78,9 +78,9 @@ public class AvatarService {
 
             BufferedImage image = ImageIO.read(bis);
 
-            int height = image.getHeight() / (image.getHeight() / 100);
+            int height = image.getHeight() / (image.getWidth() / 100);
             BufferedImage preview = new BufferedImage(100, height, image.getType());
-            Graphics graphics = preview.createGraphics();
+            Graphics2D graphics = preview.createGraphics();
             graphics.drawImage(image, 0, 0, 100, height, null);
             graphics.dispose();
 
@@ -89,7 +89,7 @@ public class AvatarService {
         }
     }
     public ResponseEntity<Collection<Avatar>> findByPagination(int pageNumber, int pageSize){
-        logger.info("Find avatars by pagination for page: {}, size: {}", pageNumber, pageSize);
+        logger.debug("Find avatars by pagination for page: {}, size: {}", pageNumber, pageSize);
         PageRequest pageRequest=PageRequest.of(pageNumber-1, pageSize);
 
         Collection<Avatar> avatars=avatarRepository.findAll(pageRequest).getContent();

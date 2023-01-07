@@ -7,6 +7,8 @@ import ru.hogwarts.school.exception.StudentNotFoundException;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import ru.hogwarts.school.repositories.StudentRepository;
 import ru.hogwarts.school.repositories.StudentsList;
 
@@ -76,7 +78,23 @@ public class StudentService {
         return studentRepository.getLastStudentsById(limit);
     }
 
-   // public List<Student> getStudentsByAge(int age) {
-    //    return studentRepository.;}
+    public List<String> getStudentsByNameStartsWith(String letter){
+        logger.debug("Get Students by name starts with: {}", letter);
+        return studentRepository.findAll()
+                .stream()
+                .map(s->s.getName())
+                .filter(n->n.startsWith(letter))
+                .sorted((s1,s2)->s1.compareTo(s2))
+                .map(s->s.toUpperCase())
+                .collect(Collectors.toList());
+    }
 
+    public Double getStudentsAgeAvgWithStream(){
+        logger.debug("Get students average age with stream");
+        return studentRepository.findAll()
+                .stream()
+                .mapToDouble(s->s.getAge())
+                .average()
+                .orElse(Double.NaN);
+    }
 }

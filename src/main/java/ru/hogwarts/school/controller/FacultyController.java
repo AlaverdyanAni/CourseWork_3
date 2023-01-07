@@ -51,6 +51,11 @@ public class FacultyController {
         return ResponseEntity.ok(facultyService.findFacultyStudents(id));
     }
 
+    @GetMapping("/longest-name")
+    public ResponseEntity<String> getFacultiesWithLongestName(){
+        return ResponseEntity.ok(facultyService.getFacultiesWithLongestName());
+    }
+
 
     //@GetMapping("/colour") // GET http"//localhost:8080/faculties/colour?colour=
     //public ResponseEntity<List<Faculty>> getFacultiesByColour(@RequestParam String colour){

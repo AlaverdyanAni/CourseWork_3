@@ -16,6 +16,7 @@ public class StudentController {
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
     }
+
     @PostMapping //POST http://localhost:8080/student
     public ResponseEntity<Student> createStudent(@RequestBody Student student) {
         return ResponseEntity.ok(studentService.createStudent(student));
@@ -26,9 +27,9 @@ public class StudentController {
         return ResponseEntity.ok(studentService.readStudent(id));
     }
 
-    @PutMapping ("/{id}")//PUT http://localhost:8080/student
-    public ResponseEntity<Student> updateStudent(@PathVariable Long id,@RequestBody Student student) {
-        return ResponseEntity.ok(studentService.updateStudent(id,student));
+    @PutMapping("/{id}")//PUT http://localhost:8080/student
+    public ResponseEntity<Student> updateStudent(@PathVariable Long id, @RequestBody Student student) {
+        return ResponseEntity.ok(studentService.updateStudent(id, student));
     }
 
     @DeleteMapping("{id}") //Delete http://localhost:8080/student/2
@@ -37,38 +38,46 @@ public class StudentController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping ("/all") //GET http://localhost:8080/student/2
+    @GetMapping("/all") //GET http://localhost:8080/student/2
     public ResponseEntity<List<Student>> getStudents() {
         return ResponseEntity.ok(studentService.getStudents());
     }
 
-    @GetMapping (params = {"minAge","maxAge"})//GET http://localhost:8080/student?minAge=18&maxAge=20
+    @GetMapping("/count")
+    public ResponseEntity<Integer> getStudentsCount() {
+        return ResponseEntity.ok(studentService.getStudentsCount());
+    }
+
+    @GetMapping("/{id}/faculty") //GET http://localhost:8080/student/1/faculty
+    public ResponseEntity<Faculty> findStudentFaculty(@PathVariable Long id) {
+        return ResponseEntity.ok(studentService.findStudentFaculty(id));
+    }
+
+    @GetMapping(params = {"minAge", "maxAge"})//GET http://localhost:8080/student?minAge=18&maxAge=20
     public ResponseEntity<List<Student>> findStudentsByAgeBetween(@RequestParam int minAge,
                                                                   @RequestParam int maxAge) {
         return ResponseEntity.ok(studentService.findStudentsByAgeBetween(minAge, maxAge));
     }
 
-    @GetMapping("/{id}/faculty") //GET http://localhost:8080/student/1/faculty
-    public  ResponseEntity <Faculty> findStudentFaculty(@PathVariable Long id){
-        return ResponseEntity.ok(studentService.findStudentFaculty(id));
-    }
-    
-    @GetMapping("/count")
-    public ResponseEntity<Integer> getStudentsCount(){
-        return ResponseEntity.ok(studentService.getStudentsCount());
-    }
-
     @GetMapping("/age-avg")
-    public ResponseEntity<Double> getStudentsAgeAvg(){
+    public ResponseEntity<Double> getStudentsAgeAvg() {
         return ResponseEntity.ok(studentService.getStudentsAgeAvg());
     }
 
+    @GetMapping("/age-avg-with-stream")
+    public ResponseEntity<Double> getStudentsAgeAvgWithStream() {
+        return ResponseEntity.ok(studentService.getStudentsAgeAvgWithStream());
+    }
+
     @GetMapping("/last-students")
-    public ResponseEntity<List<StudentsList>> getLastStudentsById(@RequestParam Integer limit){
+    public ResponseEntity<List<StudentsList>> getLastStudentsById(@RequestParam Integer limit) {
         return ResponseEntity.ok(studentService.getLastStudentsById(limit));
     }
 
-}
+    @GetMapping("/name-starts-with")
+    public ResponseEntity<List<String>> getStudentsByNameStartsWith(@RequestParam String letter) {
+        return ResponseEntity.ok(studentService.getStudentsByNameStartsWith(letter));
+    }
 
     // @GetMapping("/age") //GET http://localhost:8080/students/2
     // public ResponseEntity<List<Student>> getStudentsByAge(@RequestParam Integer age){
@@ -76,6 +85,6 @@ public class StudentController {
     //        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     //   }
     //  return ResponseEntity.ok(studentService.getStudentsByAge(age));
-    // }
+}
 
 

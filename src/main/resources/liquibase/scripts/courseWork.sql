@@ -1,7 +1,7 @@
 --liquibase formatted sql
 
 --changeset ania:1
-CREATE  INDEX students_name_index ON students(name);
+CREATE  INDEX IF NOT EXISTS students_name_index ON students(name);
 
 --changeset ania:2
-CREATE INDEX faculties_name_colour_index ON faculties(name,colour);
+CREATE INDEX IF NOT EXISTS faculties_name_colour_index ON faculties(name,colour);
