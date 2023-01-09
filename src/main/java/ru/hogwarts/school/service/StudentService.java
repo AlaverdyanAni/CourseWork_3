@@ -8,7 +8,6 @@ import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import ru.hogwarts.school.repositories.StudentRepository;
 import ru.hogwarts.school.repositories.StudentsList;
 

@@ -43,12 +43,12 @@ public class FacultyController {
 
     @GetMapping(value = "/colour",params = "text") //GET http"//localhost:8080/faculties/colour?text=
     public ResponseEntity<List<Faculty>> findFacultiesByNameOrColour(@RequestParam String text){
-        return ResponseEntity.ok(facultyService.findFacultiesByNameOrColour(text));
+        return ResponseEntity.ok(facultyService.getFacultiesByNameOrColour(text));
     }
 
     @GetMapping("/{id}/students") //GET http"//localhost:8080/3/students
     public ResponseEntity <List<Student>> findFacultyStudents(@PathVariable Long id){
-        return ResponseEntity.ok(facultyService.findFacultyStudents(id));
+        return ResponseEntity.ok(facultyService.getFacultyStudents(id));
     }
 
     @GetMapping("/longest-name")

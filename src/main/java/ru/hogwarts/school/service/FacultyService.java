@@ -53,12 +53,12 @@ public class FacultyService {
         return facultyRepository.findAll();
     }
 
-    public List<Faculty> findFacultiesByNameOrColour(String nameOrColour) {
+    public List<Faculty> getFacultiesByNameOrColour(String nameOrColour) {
         logger.debug("Find  all faculties by name: {} or colour: {}", nameOrColour);
         return facultyRepository.findFacultiesByNameIgnoreCaseOrColourIgnoreCase(nameOrColour, nameOrColour);
     }
 
-    public List<Student> findFacultyStudents(long facultyId) {
+    public List<Student> getFacultyStudents(long facultyId) {
         logger.debug("Find students by faculty ID: {}", facultyId);
         Faculty faculty = readFaculty(facultyId);
         return studentRepository.findStudentsByFacultyId(faculty.getId());

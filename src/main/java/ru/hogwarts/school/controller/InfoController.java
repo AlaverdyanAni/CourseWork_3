@@ -1,4 +1,6 @@
 package ru.hogwarts.school.controller;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,6 +10,7 @@ import java.util.stream.Stream;
 
 @RestController
 public class InfoController {
+   Logger logger= LoggerFactory.getLogger(InfoController.class);
     @Value("${server.port}")
     private String port;
 
@@ -23,6 +26,8 @@ public class InfoController {
                 .limit(1_000_000)
                 .reduce(0,(a,b)->a+b);
         time=System.currentTimeMillis()-time;
+        System.out.println(time);
+        logger.debug("Time: {}",time);
         return (int) time;
     }
 }
