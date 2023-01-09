@@ -23,6 +23,7 @@ public class InfoController {
     public int getSum(){
         long time=System.currentTimeMillis();
         Stream.iterate(1, a->a+1)
+                .parallel()
                 .limit(1_000_000)
                 .reduce(0,(a,b)->a+b);
         time=System.currentTimeMillis()-time;
