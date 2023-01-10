@@ -79,6 +79,18 @@ public class StudentController {
         return ResponseEntity.ok(studentService.getStudentsByNameStartsWith(letter));
     }
 
+    @GetMapping("/print-students-name")
+    public  void getStudentsName(){
+      studentService.getStudentsName();
+    }
+
+    @GetMapping("/print-sync-students-name")
+    public  void getSyncStudentsName(){
+        studentService.getSyncStudentsName();
+    }
+
+
+
     // @GetMapping("/age") //GET http://localhost:8080/students/2
     // public ResponseEntity<List<Student>> getStudentsByAge(@RequestParam Integer age){
     //    if (age<7||age>60){

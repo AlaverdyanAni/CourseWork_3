@@ -12,7 +12,7 @@ import ru.hogwarts.school.repositories.StudentRepository;
 import ru.hogwarts.school.repositories.StudentsList;
 
 @Service
-@Profile("prodaction")
+//@Profile("prodaction")
 public class StudentService {
     private final StudentRepository studentRepository;
     Logger logger= LoggerFactory.getLogger(StudentService.class);
@@ -95,5 +95,73 @@ public class StudentService {
                 .mapToDouble(s->s.getAge())
                 .average()
                 .orElse(Double.NaN);
+    }
+
+    public void getStudentsName(){
+        List <String> studentsName=studentRepository.findAll().stream()
+                .map(s->s.getName())
+                .collect(Collectors.toList());
+
+        printStudentsName(studentsName.get(0));
+        printStudentsName(studentsName.get(1));
+
+        Thread thread1=new Thread(()-> {
+            printStudentsName(studentsName.get(2));
+            printStudentsName(studentsName.get(3));
+            printStudentsName(studentsName.get(4));
+            printStudentsName(studentsName.get(5));
+            printStudentsName(studentsName.get(6));
+        });
+        thread1.start();
+
+        Thread thread2=new Thread(()-> {
+            printStudentsName(studentsName.get(7));
+            printStudentsName(studentsName.get(8));
+            printStudentsName(studentsName.get(9));
+            printStudentsName(studentsName.get(10));
+            printStudentsName(studentsName.get(11));
+        });
+        thread2.start();
+    }
+
+    public void getSyncStudentsName(){
+        List<String> studentsName=studentRepository.findAll().stream()
+                .map(s->s.getName())
+                .collect(Collectors.toList());
+
+        printSyncStudentsName(studentsName);
+        printSyncStudentsName(studentsName);
+
+        Thread thread1=new Thread(()-> {
+            printSyncStudentsName(studentsName);
+            printSyncStudentsName(studentsName);
+            printSyncStudentsName(studentsName);
+            printSyncStudentsName(studentsName);
+            printSyncStudentsName(studentsName);
+        });
+        thread1.start();
+
+        Thread thread2=new Thread(()-> {
+            printSyncStudentsName(studentsName);
+            printSyncStudentsName(studentsName);
+            printSyncStudentsName(studentsName);
+            printSyncStudentsName(studentsName);
+            printSyncStudentsName(studentsName);
+        });
+        thread2.start();
+    }
+
+    public Integer count1=1;
+    private void printStudentsName(String name){
+        System.out.println("Operation: " +count1+ " , Name: " + name);
+        count1++;
+    }
+
+    public Integer count2=1;
+    private void printSyncStudentsName(List<String> name) {
+        synchronized (count2) {
+            System.out.println("Operation: " +count2+ " , Name: " + name.get(count2-1));
+            count2++;
+        }
     }
 }
